@@ -23,6 +23,7 @@
 #define TIMER_CAPTURE_SEL_BIT_MASK    (0x1F << TIMER_CAPTURE_SEL_BIT_POS) ///< Capture selection bit mask
 #define TIMER_CAPTURE_MODE_MASK       (1 << 9)  ///< Capture mode bit mask
 #define TIMER_BUSY_BIT_MASK           (1 << 10) ///< Busy bit mask
+#define TIMER_TRIGGER_MODE_BIT_MASK   (1 << 11) ///< Trigger mode bit mask
 
 #define TIMER_MODE_CONTINUOUS         0         ///< Continuous mode
 #define TIMER_MODE_CAPTURE            1         ///< Capture mode
@@ -31,6 +32,9 @@
 #define CAPTURE_MODE_RISING           0         ///< Capture mode: Rising edge
 #define CAPTURE_MODE_FALLING          1         ///< Capture mode: Falling edge
 
+#define TIMER_TRIGGER_MODE_AUTO       0         ///< Trigger mode: Auto
+#define TIMER_TRIGGER_MODE_MANUAL     1         ///< Trigger mode: Manual
+
 typedef struct TimerCRegField_t {
     unsigned START : 1;          ///< Bit 0: Start bit
     unsigned STOP : 1;           ///< Bit 1: Stop bit
@@ -38,7 +42,8 @@ typedef struct TimerCRegField_t {
     unsigned CAPTURE_SEL : 5;    ///< Bit 4-8: Capture selection (0-31)
     unsigned CAPTURE_MODE : 1;   ///< Bit 9: Capture mode (0: RISING, 1: FALLING)
     unsigned BUSY : 1;           ///< Bit 10: Busy bit
-    unsigned reserved : 21;      ///< Bit 11-31: Reserved bits
+    unsigned TRIGGER_MODE : 1;   ///< Bit 11: Trigger mode (0: AUTO, 1: MANUAL)
+    unsigned reserved : 20;      ///< Bit 11-31: Reserved bits
 } TimerCRegField_t;
 
 typedef union TimerCReg_t {
@@ -51,6 +56,11 @@ typedef enum TimerMode_t {
     CAPTURE    = 1, ///< Capture mode
     PWM        = 2  ///< PWM mode
 } TimerMode_t;
+
+typedef enum TriggerMode_t{
+    AUTO = 0,    ///< Auto trigger mode
+    MANUAL = 1   ///< Manual trigger mode
+} TriggerMode_t;
 
 typedef struct TimerRegFile_t {
     volatile TimerCReg_t creg;      ///< Control register
@@ -131,6 +141,17 @@ uint64_t timerGetCaptureValue(TimerRegFile_t* inst);
     @param mode Modo di funzionamento da impostare (0: CONTINUOUS, 1: CAPTURE, 2: PWM)
 */
 void timerSetMode(TimerRegFile_t* inst, TimerMode_t mode);
+
+/**
+    @brief Imposta la modalita' di trigger del timer.
+    @details La modalita' di trigger del timer puo' essere AUTO o MANUAL,
+              - In mod. AUTO il timer si avvia automaticamente quando CC passa al valore di CAPTURE_MODE
+              - In mod. MANUAL il timer si avvia allo start.abort
+    
+    @param inst Puntatore alla struttura dei registri del timer
+    @param mode Modalita' di trigger da impostare (AUTO, MANUAL)
+*/
+void timerSetTriggerMode(TimerRegFile_t* inst, TriggerMode_t mode);
 
 /**
     @brief Imposta il valore di confronto del timer.

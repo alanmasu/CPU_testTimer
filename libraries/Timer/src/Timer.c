@@ -35,6 +35,11 @@ void timerSetMode(TimerRegFile_t* inst, TimerMode_t mode){
     inst->creg.reg.MODE = mode;
 }
 
+void timerSetTriggerMode(TimerRegFile_t* inst, TriggerMode_t mode){
+    // Set the trigger mode in the control register
+    inst->creg.reg.TRIGGER_MODE = mode;
+}
+
 void timerSetCaptureMode(TimerRegFile_t* inst, uint8_t mode){
     // Set the capture mode in the control register
     inst->creg.reg.CAPTURE_MODE = mode;

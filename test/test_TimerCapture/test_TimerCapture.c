@@ -19,7 +19,7 @@ void initMatrices(){
     }
 }
 
-uint64_t results[2] = {0, 0};
+uint64_t resultsTestCapture[2] = {0, 0};
 
 int main(int argc, char const *argv[]){
     // Initialize Matrices
@@ -27,6 +27,7 @@ int main(int argc, char const *argv[]){
 
     // Configure Timer to measure BTPU execution time
     timerSetMode(Timer0RegFile, CAPTURE);
+    timerSetTriggerMode(Timer0RegFile, AUTO);
     timerSetCaptureMode(Timer0RegFile, CAPTURE_MODE_FALLING);
     timerSetCaptureSelector(Timer0RegFile, 0);
 
@@ -36,15 +37,15 @@ int main(int argc, char const *argv[]){
     btpuStartBinaryMatrixMul(BTPU0RegFile, 30, false, true, BTPU_USE_MEMORY_0_CONFIG);
     btpuWaitBinaryMatrixMul(BTPU0RegFile);
 
-    results[0] = timerGetCaptureValue(Timer0RegFile);
+    resultsTestCapture[0] = timerGetCaptureValue(Timer0RegFile);
 
     // //Configure second Binary Matrix Mul
     btpuSetAddrs(BTPU0RegFile, 0, 0, 1);
     timerStart(Timer0RegFile);
     btpuStartBinaryMatrixMul(BTPU0RegFile, 30, false, true, BTPU_USE_MEMORY_1_CONFIG);
     btpuWaitBinaryMatrixMul(BTPU0RegFile);
-    
-    results[1] = timerGetCaptureValue(Timer0RegFile);
+
+    resultsTestCapture[1] = timerGetCaptureValue(Timer0RegFile);
 
     BTPU0RegFile->creg.reg.BRAM_PORT_SEL = BTPU_BRAM_PORT_SEL_EXT;
 
