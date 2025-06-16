@@ -35,6 +35,10 @@
 #define TIMER_TRIGGER_MODE_AUTO       0         ///< Trigger mode: Auto
 #define TIMER_TRIGGER_MODE_MANUAL     1         ///< Trigger mode: Manual
 
+#define TIMER_MS_TO_TIKS(ms) ((ms) * 40000)
+#define TIMER_US_TO_TIKS(us) ((us) * 40)
+#define TIMER_KHZ_TO_TIKS(khz) ((int)TIMER_US_TO_TIKS((500/khz)))
+
 typedef struct TimerCRegField_t {
     unsigned START : 1;          ///< Bit 0: Start bit
     unsigned STOP : 1;           ///< Bit 1: Stop bit
@@ -207,6 +211,18 @@ void waitUs(uint64_t us);
     @param ms Numero di millisecondi da attendere
 */
 void waitMs(TimerRegFile_t* inst, uint64_t ms);
+
+/**
+    @brief Attende un certo numero di tiks.
+    @details Controlla se il timer e' impostato in modalità CONTINUOUS, se non è partito lo 
+             avvia e attende il numero di tiks specificato. Se il timer è in modalità CAPTURE o PWM,
+             la funzione restituisce false.
+    @param inst Puntatore alla struttura dei registri del timer
+    @param tiks Numero di tiks da attendere
+    @return true se il timer è in modalità CONTINUOUS e ha atteso il numero di tiks specificato, 
+            false altrimenti (ad esempio se il timer è in modalità CAPTURE o PWM).
+*/
+bool timerWaitTiks(TimerRegFile_t* inst, uint64_t tiks);
 
 
 #endif // __TIMER_H__

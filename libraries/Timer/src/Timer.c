@@ -98,3 +98,22 @@ void waitMs(TimerRegFile_t* inst, uint64_t ms){
         }
     #endif
 }
+
+__attribute__((optimize("O3")))
+bool timerWaitTiks(TimerRegFile_t* inst, uint64_t tiks){
+    uint64_t t0 = 0;
+    // Set the timer to continuous mode
+    if(inst->creg.reg.MODE != CONTINUOUS){
+        return false; 
+    }
+    if(! inst->creg.reg.BUSY){
+        timerStart(inst); // Start the timer if not already busy
+    }else{
+        t0 = timerGetCounter(inst);
+    }
+        
+    while(timerGetCounter(inst) - t0 < tiks){
+        // Wait until the timer reaches the specified number of ticks
+    }
+    return true;
+}
