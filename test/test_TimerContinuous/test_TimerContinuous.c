@@ -12,7 +12,7 @@
     #define PRINTF_DBG(...)
 #endif
 
-
+uint64_t timerValue = 0;
 
 int main(int argc, char const *argv[]){
     // Inizializza il timer in modalità CONTINUOUS
@@ -42,11 +42,9 @@ int main(int argc, char const *argv[]){
     timerStop(Timer0RegFile);
 
     // Ottieni il valore del timer
-    uint64_t timerValue = timerGetCounter(Timer0RegFile);
+    timerValue = timerGetCounter(Timer0RegFile);
 
-    __asm__(
-        "sw a0, 0(sp)\n\t"
-    );
+    
 
     while(1);
     
