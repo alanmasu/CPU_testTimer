@@ -50,6 +50,13 @@ void timerSetCaptureSelector(TimerRegFile_t* inst, uint8_t sel){
     inst->creg.reg.CAPTURE_SEL = sel;
 }
 
+void timerSetPWM(TimerRegFile_t* inst, uint64_t compareValue, uint64_t terminalCount){
+    inst->capture_LSB = (uint32_t)(terminalCount & 0xFFFFFFFF);
+    inst->capture_MSB = (uint32_t)((terminalCount >> 32) & 0xFFFFFFFF);
+    inst->compare_LSB = (uint32_t)(compareValue & 0xFFFFFFFF);
+    inst->compare_MSB = (uint32_t)((compareValue >> 32) & 0xFFFFFFFF);
+}
+
 bool timerIsBusy(TimerRegFile_t* inst){
     // Check if the timer is busy
     return inst->creg.reg.BUSY;

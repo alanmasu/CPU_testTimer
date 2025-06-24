@@ -189,6 +189,12 @@ void timerSetCaptureMode(TimerRegFile_t* inst, uint8_t mode);
 void timerSetCaptureSelector(TimerRegFile_t* inst, uint8_t sel);
 
 /**
+   @brief Imposta i parametri per il PWM
+   
+*/
+void timerSetPWM(TimerRegFile_t* inst, uint64_t compareValue, uint64_t terminalCount);
+
+/**
     @brief Controlla se il timer è occupato.
     @details Controlla se il timer è occupato, leggendo il bit BUSY del registro di controllo.
 

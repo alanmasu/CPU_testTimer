@@ -81,6 +81,8 @@ if [ "$SIMULATION" -eq 1 ]; then
     executePython -s scripts/getSymbols.py build/bin/test/test_TimerCapture --format sv -a -o "/home/alan.masutti/Documents/CPU Repo/testbench/Timer/test_TimerCapture.svh"
     riscv32-unknown-elf-objdump -D build/bin/test/test_TimerCapture > scratch/output/test_TimerCapture_disas.txt
     riscv32-unknown-elf-readelf -S build/bin/test/test_TimerCapture > scratch/output/test_TimerCapture_sections.txt
+
+    executePython --format sv build/bin/test/test_PWM "/home/alan.masutti/Documents/CPU Repo/testbench/Timer/test_TimerPWM.svh" test_TimerPWM
 else
     if [ "$SIMULATION_PREV" -eq 1 ]; then
         echo "Cleaning previous simulation build..."
